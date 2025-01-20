@@ -9,15 +9,15 @@ export function extractSocialInfo(url: string): { platform: string; username: st
       const username = urlObj.pathname.split('/')[1];
       return { platform: 'instagram', username };
     }
-    
+
     // TikTok
     if (urlObj.hostname.includes('tiktok.com')) {
       const username = urlObj.pathname.split('/')[1];
       if (!username) return null;
       const cleanUsername = username.replace('@', '');
-      return { 
-        platform: 'tiktok', 
-        username: `@${cleanUsername}` 
+      return {
+        platform: 'tiktok',
+        username: `@${cleanUsername}`,
       };
     }
 
@@ -28,15 +28,12 @@ export function extractSocialInfo(url: string): { platform: string; username: st
       const cleanUsername = username.replace('@', '');
       return {
         platform: 'twitter',
-        username: `@${cleanUsername}`
+        username: `@${cleanUsername}`,
       };
     }
 
     // YouTube
-    if (
-      urlObj.hostname.includes('youtube.com') || 
-      urlObj.hostname.includes('youtu.be')
-    ) {
+    if (urlObj.hostname.includes('youtube.com') || urlObj.hostname.includes('youtu.be')) {
       if (urlObj.pathname.includes('/c/') || urlObj.pathname.includes('/user/')) {
         const username = urlObj.pathname.split('/').filter(Boolean)[1];
         return { platform: 'youtube', username };

@@ -13,7 +13,7 @@ export class SocialProfileService {
       instagram: new InstagramService(),
       tiktok: new TiktokService(),
       twitter: new TwitterService(),
-      youtube: new YoutubeService()
+      youtube: new YoutubeService(),
     };
   }
 

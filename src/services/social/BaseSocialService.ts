@@ -16,7 +16,7 @@ export abstract class BaseSocialService {
     if (isDev) {
       return localPuppeteer.launch({
         headless: false,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
       });
     }
 
@@ -38,12 +38,12 @@ export abstract class BaseSocialService {
       console.log(`Navigating to profile: ${username}`);
       await page.goto(config.url, {
         waitUntil: 'networkidle0',
-        timeout: 30000
+        timeout: 30000,
       });
 
       const element = await page.waitForSelector(config.imageSelector, {
         visible: true,
-        timeout: 5000
+        timeout: 5000,
       });
 
       if (!element) {
@@ -52,7 +52,7 @@ export abstract class BaseSocialService {
       }
 
       const srcHandle = await element.getProperty('src');
-      const imageUrl = await srcHandle.jsonValue() as string;
+      const imageUrl = (await srcHandle.jsonValue()) as string;
 
       if (!imageUrl) {
         console.log('Profile image URL not found for:', username);
