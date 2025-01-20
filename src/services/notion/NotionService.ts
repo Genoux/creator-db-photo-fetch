@@ -8,18 +8,30 @@ export class NotionService {
     this.notion = new Client({ auth: NOTION_CONFIG.auth });
   }
 
-  async updateProfileImage(profileId: string, imageUrl: string) {
+  async updateProfileImage(pageId: string, imageUrl: string) {
     try {
       await this.notion.pages.update({
-        page_id: profileId,
-        properties: {
-          profile_image: {
-            url: imageUrl,
-          },
-        },
+        page_id: pageId,
+        icon: {
+          type: "external",
+          external: {
+            url: imageUrl
+          }
+        }
       });
     } catch (error) {
-      console.error('Error updating Notion profile:', error);
+      console.error('Error updating Notion profile icon:', error);
+      throw error;
+    }
+  }
+
+  async getPage(pageId: string) {
+    try {
+      return await this.notion.pages.retrieve({
+        page_id: pageId
+      });
+    } catch (error) {
+      console.error('Error retrieving Notion page:', error);
       throw error;
     }
   }

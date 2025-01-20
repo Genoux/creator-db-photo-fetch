@@ -15,22 +15,25 @@ export abstract class BaseSocialService {
 
   private async getBrowser() {
     const isDev = process.env.NODE_ENV === 'development';
+    const commonArgs = [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--disable-web-security',
+      '--disable-features=IsolateOrigins,site-per-process',
+      '--disable-site-isolation-trials'
+    ];
 
     if (isDev) {
       const browserOptions = {
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-gpu'
-        ],
+        args: commonArgs,
         executablePath: process.env.CHROME_EXECUTABLE_PATH,
         headless: false,
         ignoreHTTPSErrors: true
       };
       return localPuppeteer.launch(browserOptions);
     } else {
-      // Initialize chromium
       const execPath = await chromium.executablePath() || '/usr/bin/chromium-browser';
       if (!execPath) {
         throw new Error('Chromium executable path is undefined');
@@ -57,61 +60,64 @@ export abstract class BaseSocialService {
   public async getProfileImage(username: string): Promise<string | null> {
     let browser = null;
     let page = null;
-
+    
     try {
       browser = await this.getBrowser();
-
       page = await browser.newPage();
-
+  
       await page.setRequestInterception(true);
-
       page.on('request', (request) => {
         const resourceType = request.resourceType();
-        if (['font', 'stylesheet', 'script'].includes(resourceType)) {
+        const url = request.url();
+        
+        if (
+          url.includes('google-analytics.com') ||
+          url.includes('doubleclick.net') ||
+          url.includes('facebook.com') ||
+          url.includes('google.com') ||
+          url.includes('amazon-adsystem.com') ||
+          url.includes('adnxs.com') ||
+          url.includes('googleapis.com') ||
+          resourceType === 'font' ||
+          resourceType === 'media' ||
+          resourceType === 'websocket' ||
+          resourceType === 'manifest' ||
+          resourceType === 'other'
+        ) {
           request.abort();
         } else {
           request.continue();
         }
       });
-
+  
       const config = this.getPlatformConfig(username);
-
-      await page.goto(config.url, {
-        waitUntil: 'networkidle0',
-        timeout: 30000,
+  
+      const navigationPromise = page.goto(config.url);
+  
+      const imageElement = await page.waitForSelector(config.imageSelector, {
+        timeout: 10000
       });
-
-      const element = await page.waitForSelector(config.imageSelector, {
-        visible: true,
-        timeout: 15000,
-      });
-      console.log('Found selector');
-
-      if (!element) {
-        throw new Error('No profile image element found');
+  
+      if (!imageElement) {
+        throw new Error('Profile image not found');
       }
-
-      const srcHandle = await element.getProperty('src');
+  
+      const srcHandle = await imageElement.getProperty('src');
       const imageUrl = (await srcHandle.jsonValue()) as string;
-
-      console.log('Image URL:', imageUrl);
-
-      if (!imageUrl) {
-        throw new Error('No image URL found');
+  
+      try {
+        await navigationPromise;
+      } catch (e) {
       }
-
+  
       return imageUrl;
+  
     } catch (error) {
       console.error('Error:', error);
       return null;
     } finally {
-      try {
-        if (page) await page.close();
-        if (browser) await browser.close();
-        console.log('Browser and page closed');
-      } catch (closeError) {
-        console.error('Error during cleanup:', closeError);
-      }
+      if (page) await page.close();
+      if (browser) await browser.close();
     }
   }
 }
