@@ -1,18 +1,12 @@
 [build]
   functions = "netlify/functions"
-  command = "npm run build"
+  command = "pnpm run build"
 
 [functions]
   node_bundler = "esbuild"
   external_node_modules = ["@sparticuz/chromium"]
 
-[[redirects]]
-  from = "/webhook"
-  to = "/.netlify/functions/webhook"
-  status = 200
-
-[dev]
-  port = 8888
-  publish = "public"
-  functions = "netlify/functions"
-  targetPort = 3000
+[build.environment]
+  NODE_VERSION = "18"
+  NPM_FLAGS = "--version"
+  PNPM_FLAGS = "--version"

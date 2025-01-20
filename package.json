@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "netlify dev",
+    "dev": "NODE_ENV=development netlify dev",
     "build": "tsc",
     "start": "node dist/index.js",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
@@ -16,18 +16,18 @@
   "dependencies": {
     "@netlify/functions": "^2.8.2",
     "@notionhq/client": "^2.2.15",
-    "@sparticuz/chromium": "^131.0.1",
     "@types/node": "^22.10.7",
     "express": "^4.21.2",
     "puppeteer": "^24.1.0",
-    "puppeteer-core": "^24.1.0",
     "typescript": "^5.7.3"
   },
   "devDependencies": {
+    "@sparticuz/chromium": "^131.0.1",
     "@types/express": "^5.0.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
     "netlify-cli": "^17.0.0",
-    "prettier": "^3.4.2"
+    "prettier": "^3.4.2",
+    "puppeteer-core": "^24.1.0"
   }
 }

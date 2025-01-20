@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@sparticuz/chromium": "latest",
+    "puppeteer-core": "latest"
+  }
+}
