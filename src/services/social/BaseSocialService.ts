@@ -15,55 +15,59 @@ export abstract class BaseSocialService {
 
   private async getBrowser() {
     const isDev = process.env.NODE_ENV === 'development';
-    console.log('NODE_ENV:', process.env.NODE_ENV);
-    
+
     if (isDev) {
-        const browserOptions = {
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--disable-gpu'
-            ],
-            executablePath: process.env.CHROME_EXECUTABLE_PATH,
-            headless: true,
-            ignoreHTTPSErrors: true
-        };
-        console.log('Launching browser in dev with options:', browserOptions);
-        return localPuppeteer.launch(browserOptions);
+      const browserOptions = {
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-gpu'
+        ],
+        executablePath: process.env.CHROME_EXECUTABLE_PATH,
+        headless: false,
+        ignoreHTTPSErrors: true
+      };
+      return localPuppeteer.launch(browserOptions);
     } else {
-        // Turn off graphics for better performance since we don't need WebGL
-        chromium.setGraphicsMode = false;
-        
-        const browserOptions = {
-            args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
-            defaultViewport: chromium.defaultViewport,
-            executablePath: await chromium.executablePath(),
-            headless: true,
-            ignoreHTTPSErrors: true
-        };
-        console.log('Launching browser in production with options:', browserOptions);
-        return puppeteer.launch(browserOptions);
+      // Initialize chromium
+      const execPath = await chromium.executablePath() || '/usr/bin/chromium-browser';
+      if (!execPath) {
+        throw new Error('Chromium executable path is undefined');
+      }
+
+      const browserOptions = {
+        args: [
+          ...chromium.args,
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-gpu',
+        ],
+        defaultViewport: chromium.defaultViewport,
+        executablePath: execPath,
+        headless: chromium.headless as boolean,
+        ignoreHTTPSErrors: true,
+      };
+
+      return await puppeteer.launch(browserOptions);
     }
-}
+  }
 
   public async getProfileImage(username: string): Promise<string | null> {
     let browser = null;
+    let page = null;
 
     try {
-      console.log('Starting browser...');
       browser = await this.getBrowser();
-      console.log('Browser started successfully');
 
-      const page = await browser.newPage();
-      console.log('New page created');
+      page = await browser.newPage();
 
       await page.setRequestInterception(true);
-      console.log('Request interception enabled');
 
       page.on('request', (request) => {
         const resourceType = request.resourceType();
-        if (['font'].includes(resourceType)) {
+        if (['font', 'stylesheet', 'script'].includes(resourceType)) {
           request.abort();
         } else {
           request.continue();
@@ -71,12 +75,11 @@ export abstract class BaseSocialService {
       });
 
       const config = this.getPlatformConfig(username);
-      console.log(`Navigating to: ${config.url}`);
 
       await page.goto(config.url, {
         waitUntil: 'networkidle0',
+        timeout: 30000,
       });
-      console.log('Page loaded');
 
       const element = await page.waitForSelector(config.imageSelector, {
         visible: true,
@@ -91,23 +94,23 @@ export abstract class BaseSocialService {
       const srcHandle = await element.getProperty('src');
       const imageUrl = (await srcHandle.jsonValue()) as string;
 
+      console.log('Image URL:', imageUrl);
+
       if (!imageUrl) {
         throw new Error('No image URL found');
       }
 
       return imageUrl;
-
     } catch (error) {
       console.error('Error:', error);
       return null;
     } finally {
-      if (browser) {
-        try {
-          await browser.close();
-          console.log('Browser closed');
-        } catch (closeError) {
-          console.error('Error closing browser:', closeError);
-        }
+      try {
+        if (page) await page.close();
+        if (browser) await browser.close();
+        console.log('Browser and page closed');
+      } catch (closeError) {
+        console.error('Error during cleanup:', closeError);
       }
     }
   }

@@ -6,7 +6,7 @@ async function testWebhook() {
       id: 'test-id',
       properties: {
         'Main Channel(s)': {
-          url: 'https://www.tiktok.com/@chrisjamescomic'
+          url: 'https://www.instagram.com/sonyalrobinson/?hl=en'
         }
       }
     }
