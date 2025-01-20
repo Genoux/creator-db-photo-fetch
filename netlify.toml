@@ -9,3 +9,9 @@
   from = "/webhook"
   to = "/.netlify/functions/webhook"
   status = 200
+
+[dev]
+  port = 8888
+  publish = "public"
+  functions = "netlify/functions"
+  targetPort = 3000
