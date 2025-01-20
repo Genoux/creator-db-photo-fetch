@@ -30,7 +30,7 @@ app.post('/webhook', async (req: Request, res: Response): Promise<any> => {
 
     const profileImageUrl = await socialProfileService.getProfileImage(
       socialInfo.platform,
-      socialInfo.username
+      socialInfo.username,
     );
 
     if (!profileImageUrl) {
@@ -43,9 +43,8 @@ app.post('/webhook', async (req: Request, res: Response): Promise<any> => {
       success: true,
       platform: socialInfo.platform,
       username: socialInfo.username,
-      imageUrl: profileImageUrl
+      imageUrl: profileImageUrl,
     });
-
   } catch (error) {
     console.error('Error processing webhook:', error);
     return res.status(500).json({ error: 'Internal server error' });

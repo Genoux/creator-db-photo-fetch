@@ -5,7 +5,7 @@ export class TwitterService extends BaseSocialService {
   getPlatformConfig(username: string): SocialPlatformConfig {
     return {
       url: `https://x.com/${username}`,
-      imageSelector: 'img[alt="Profile avatar"]'
+      imageSelector: 'img[alt="Profile avatar"]',
     };
   }
 }

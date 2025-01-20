@@ -9,7 +9,6 @@ export interface NotionProfile {
   profile_image_url?: string;
 }
 
-
 export interface NotionWebhookPayload {
   source: {
     type: string;

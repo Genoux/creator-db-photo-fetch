@@ -9,25 +9,25 @@ async function testSocialProfileService() {
     // Instagram
     'https://instagram.com/faithwiththejokes',
     'instagram.com/faithwiththejokes',
-    
+
     // TikTok
     'https://www.tiktok.com/@faithwiththejokes',
     'tiktok.com/@faithwiththejokes',
-    
+
     // Twitter/X
     'https://twitter.com/elonmusk',
     'https://x.com/elonmusk',
-    
+
     // YouTube
     'https://youtube.com/@FaithWithTheJokes',
     'https://youtube.com/c/FaithWithTheJokes',
-    
+
     // Invalid cases
     'https://facebook.com/username',
     'not-a-url',
     '',
     'https://instagram.com/',
-    'https://tiktok.com/'
+    'https://tiktok.com/',
   ];
 
   console.log('Testing Social Profile Service:\n');
@@ -35,10 +35,10 @@ async function testSocialProfileService() {
   for (const url of testCases) {
     try {
       console.log('\n=== Testing URL:', url, '===');
-      
+
       // Test URL parsing
       const socialInfo = extractSocialInfo(url);
-      
+
       if (!socialInfo) {
         console.log('❌ Invalid or unsupported social media URL\n');
         continue;
@@ -50,7 +50,7 @@ async function testSocialProfileService() {
       console.log(`🔍 Fetching profile image for ${socialInfo.platform}:${socialInfo.username}...`);
       const imageUrl = await socialProfileService.getProfileImage(
         socialInfo.platform,
-        socialInfo.username
+        socialInfo.username,
       );
 
       if (imageUrl) {
@@ -58,7 +58,6 @@ async function testSocialProfileService() {
       } else {
         console.log('❌ Failed to retrieve image URL');
       }
-
     } catch (error) {
       console.error('❌ Error processing URL:', url);
       console.error('Error details:', error, '\n');
@@ -70,7 +69,7 @@ async function testSocialProfileService() {
 if (require.main === module) {
   testSocialProfileService()
     .then(() => console.log('\nTests completed'))
-    .catch(error => console.error('Test execution failed:', error));
+    .catch((error) => console.error('Test execution failed:', error));
 }
 
 export { testSocialProfileService };

@@ -5,7 +5,7 @@ export class TiktokService extends BaseSocialService {
   getPlatformConfig(username: string): SocialPlatformConfig {
     return {
       url: `https://www.tiktok.com/${username}`,
-      imageSelector: 'div[data-e2e="user-avatar"] img'
+      imageSelector: 'div[data-e2e="user-avatar"] img',
     };
   }
 }
