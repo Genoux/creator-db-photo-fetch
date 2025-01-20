@@ -1,4 +1,4 @@
-import chromium from '@sparticuz/chromium';
+import chromium from '@sparticuz/chromium-min';
 import puppeteer from 'puppeteer-core';
 import * as localPuppeteer from 'puppeteer';
 import dotenv from 'dotenv';
@@ -16,35 +16,36 @@ export abstract class BaseSocialService {
   private async getBrowser() {
     const isDev = process.env.NODE_ENV === 'development';
     console.log('NODE_ENV:', process.env.NODE_ENV);
-
+    
     if (isDev) {
-      const browserOptions = {
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-gpu'
-        ],
-        executablePath: process.env.CHROME_EXECUTABLE_PATH,
-        headless: true,
-        ignoreHTTPSErrors: true
-      };
-      console.log('Launching browser in dev with options:', browserOptions);
-      return localPuppeteer.launch(browserOptions);
+        const browserOptions = {
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu'
+            ],
+            executablePath: process.env.CHROME_EXECUTABLE_PATH,
+            headless: true,
+            ignoreHTTPSErrors: true
+        };
+        console.log('Launching browser in dev with options:', browserOptions);
+        return localPuppeteer.launch(browserOptions);
     } else {
-      // Production environment
-      const executablePath = await chromium.executablePath(`https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`);
-      const browserOptions = {
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath,
-        headless: true,
-        ignoreHTTPSErrors: true
-      };
-      console.log('Launching browser in production with options:', browserOptions);
-      return puppeteer.launch(browserOptions);
+        // Turn off graphics for better performance since we don't need WebGL
+        chromium.setGraphicsMode = false;
+        
+        const browserOptions = {
+            args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
+            defaultViewport: chromium.defaultViewport,
+            executablePath: await chromium.executablePath(),
+            headless: chromium.headless,
+            ignoreHTTPSErrors: true
+        };
+        console.log('Launching browser in production with options:', browserOptions);
+        return puppeteer.launch(browserOptions);
     }
-  }
+}
 
   public async getProfileImage(username: string): Promise<string | null> {
     let browser = null;

@@ -22,6 +22,7 @@
     "@netlify/functions": "^2.8.2",
     "@notionhq/client": "^2.2.15",
     "@sparticuz/chromium": "^119.0.2",
+    "@sparticuz/chromium-min": "^131.0.1",
     "@types/node": "^22.10.7",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
