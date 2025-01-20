@@ -1,5 +1,5 @@
 import chromium from '@sparticuz/chromium';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
 import * as localPuppeteer from 'puppeteer';
 import dotenv from 'dotenv';
 
@@ -33,8 +33,7 @@ export abstract class BaseSocialService {
       return localPuppeteer.launch(browserOptions);
     } else {
       // Production environment
-      const executablePath = await chromium.executablePath();
-
+      const executablePath = await chromium.executablePath(`https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`);
       const browserOptions = {
         args: chromium.args,
         defaultViewport: chromium.defaultViewport,

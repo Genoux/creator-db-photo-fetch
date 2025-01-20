@@ -1,7 +1,7 @@
 [build]
   command = "pnpm run build"
   functions = "netlify/functions"
-  publish = "public"
+  publish = "dist"
 
 [functions]
   external_node_modules = ["@sparticuz/chromium"]
@@ -9,4 +9,4 @@
   node_bundler = "esbuild"
 
 [build.environment]
-  NODE_VERSION = "16"
+  NODE_VERSION = "20"
