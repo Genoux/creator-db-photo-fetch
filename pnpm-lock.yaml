@@ -14,34 +14,28 @@ importers:
       '@notionhq/client':
         specifier: ^2.2.15
         version: 2.2.15
+      '@sparticuz/chromium':
+        specifier: ^119.0.2
+        version: 119.0.2
       '@types/node':
         specifier: ^22.10.7
         version: 22.10.7
-      chrome-aws-lambda:
-        specifier: ^10.1.0
-        version: 10.1.0(puppeteer-core@24.1.0)
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
       express:
         specifier: ^4.21.2
         version: 4.21.2
-      puppeteer-core:
+      puppeteer:
         specifier: ^24.1.0
-        version: 24.1.0
+        version: 24.1.0(typescript@5.7.3)
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
     devDependencies:
-      '@sparticuz/chromium':
-        specifier: ^131.0.1
-        version: 131.0.1
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.0
-      '@types/puppeteer-core':
-        specifier: ^7.0.4
-        version: 7.0.4
       eslint-config-prettier:
         specifier: ^10.0.1
         version: 10.0.1(eslint@9.18.0(jiti@2.4.2))
@@ -54,9 +48,6 @@ importers:
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
-      puppeteer:
-        specifier: ^24.1.0
-        version: 24.1.0(typescript@5.7.3)
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@22.10.7)(typescript@5.7.3)
@@ -897,8 +888,8 @@ packages:
     resolution: {integrity: sha512-doH1gimEu3A46VX6aVxpHTeHrytJAG6HgdxntYnCFiIFHEM/ZGpG8KiZGBChchjQmG0XFIBL552kBTjVcMZXwQ==}
     engines: {node: '>=12'}
 
-  '@sparticuz/chromium@131.0.1':
-    resolution: {integrity: sha512-VfmHkQmb/Px0zjwdSQwjRMwFw63Qfj+g4Giumz4jiAGEpXHgIZk6xEwlUz6yiUHVDveK2TEgMR2MR6I3okOE7w==}
+  '@sparticuz/chromium@119.0.2':
+    resolution: {integrity: sha512-VB6tHW13YpQ7HqyhKG1KU8Z1RIb/kfHMg8j/4ft5rk8mMvEm2YkBYFCHnj+yb0P/RPLcdgX3+VC58GuJilOtww==}
     engines: {node: '>= 16'}
 
   '@szmarczak/http-timer@5.0.1':
@@ -974,10 +965,6 @@ packages:
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
-
-  '@types/puppeteer-core@7.0.4':
-    resolution: {integrity: sha512-7YK4lAjXTAsFN0HFWSRr43J1iQX+xoI5EXyOYnG6F+OhqkTR+L8bYnU8dqELrKmzvbSlxczh3F7dEBJ7TriqEw==}
-    deprecated: This is a stub types definition. puppeteer-core provides its own type definitions, so you do not need this installed.
 
   '@types/qs@6.9.18':
     resolution: {integrity: sha512-kK7dgTYDyGqS+e2Q4aK9X3D7q234CIZ1Bv0q/7Z5IwRDoADNU81xXJK/YVyLbLTZCoIwUoDoffFeF+p/eIklAA==}
@@ -1456,12 +1443,6 @@ packages:
   chownr@2.0.0:
     resolution: {integrity: sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==}
     engines: {node: '>=10'}
-
-  chrome-aws-lambda@10.1.0:
-    resolution: {integrity: sha512-NZQVf+J4kqG4sVhRm3WNmOfzY0OtTSm+S8rg77pwePa9RCYHzhnzRs8YvNI6L9tALIW6RpmefWiPURt3vURXcw==}
-    engines: {node: '>= 10.16'}
-    peerDependencies:
-      puppeteer-core: ^10.1.0
 
   chromium-bidi@0.11.0:
     resolution: {integrity: sha512-6CJWHkNRoyZyjV9Rwv2lYONZf1Xm0IuDyNq97nwSsxxP3wf5Bwy15K5rOvVKMtJ127jJBmxFUanSAOjgFRxgrA==}
@@ -2950,13 +2931,6 @@ packages:
     resolution: {integrity: sha512-bPcgpIXbHnVGfI/omZIlgucDqlf4LrsunwoKue5JdZeGybt8L6KyJz2Zu19ffuZwIwLj2NAI2ZyaqNT6/cetcg==}
     engines: {node: '>=8'}
     hasBin: true
-
-  lambdafs@2.1.1:
-    resolution: {integrity: sha512-x5k8JcoJWkWLvCVBzrl4pzvkEHSgSBqFjg3Dpsc4AcTMq7oUMym4cL/gRTZ6VM4mUMY+M0dIbQ+V1c1tsqqanQ==}
-    engines: {node: '>= 10.16'}
-    hasBin: true
-    bundledDependencies:
-      - tar-fs
 
   latest-version@9.0.0:
     resolution: {integrity: sha512-7W0vV3rqv5tokqkBAFV1LbR7HPOWzXQDpDgEuib/aJ1jsZZx6x3c2mBI+TJhJzOhkGeaLbCKEHXEXLfirtG2JA==}
@@ -5633,7 +5607,7 @@ snapshots:
     dependencies:
       escape-string-regexp: 5.0.0
 
-  '@sparticuz/chromium@131.0.1':
+  '@sparticuz/chromium@119.0.2':
     dependencies:
       follow-redirects: 1.15.9(debug@4.3.7)
       tar-fs: 3.0.8
@@ -5716,15 +5690,6 @@ snapshots:
       undici-types: 6.20.0
 
   '@types/normalize-package-data@2.4.4': {}
-
-  '@types/puppeteer-core@7.0.4':
-    dependencies:
-      puppeteer-core: 24.1.0
-    transitivePeerDependencies:
-      - bare-buffer
-      - bufferutil
-      - supports-color
-      - utf-8-validate
 
   '@types/qs@6.9.18': {}
 
@@ -6256,11 +6221,6 @@ snapshots:
   chownr@1.1.4: {}
 
   chownr@2.0.0: {}
-
-  chrome-aws-lambda@10.1.0(puppeteer-core@24.1.0):
-    dependencies:
-      lambdafs: 2.1.1
-      puppeteer-core: 24.1.0
 
   chromium-bidi@0.11.0(devtools-protocol@0.0.1380148):
     dependencies:
@@ -7882,8 +7842,6 @@ snapshots:
       commander: 10.0.1
       dotenv: 16.4.7
       winston: 3.17.0
-
-  lambdafs@2.1.1: {}
 
   latest-version@9.0.0:
     dependencies:
