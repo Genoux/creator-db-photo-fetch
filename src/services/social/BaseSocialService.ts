@@ -1,70 +1,124 @@
-import chromium from '@sparticuz/chromium';
+import chromium from 'chrome-aws-lambda';
 import puppeteer from 'puppeteer-core';
 import * as localPuppeteer from 'puppeteer';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export interface SocialPlatformConfig {
-  url: string;
-  imageSelector: string;
+    url: string;
+    imageSelector: string;
 }
 
 export abstract class BaseSocialService {
-  abstract getPlatformConfig(username: string): SocialPlatformConfig;
+    abstract getPlatformConfig(username: string): SocialPlatformConfig;
 
-  private async getBrowser() {
-    const isDev = process.env.NODE_ENV === 'development';
-
-    if (isDev) {
-      return localPuppeteer.launch({
-        headless: false,
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      });
-    }
-
-    return puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
-      headless: chromium.headless,
-    });
+    private async getBrowser() {
+      const isDev = process.env.NODE_ENV === 'development';
+      console.log('NODE_ENV:', process.env.NODE_ENV);
+      
+      if (isDev) {
+          const browserOptions = {
+              args: [
+                  '--no-sandbox',
+                  '--disable-setuid-sandbox',
+                  '--disable-dev-shm-usage',
+                  '--disable-gpu'
+              ],
+              executablePath: process.env.CHROME_EXECUTABLE_PATH,
+              headless: true,
+              ignoreHTTPSErrors: true
+          };
+          console.log('Launching browser in dev with options:', browserOptions);
+          return puppeteer.launch(browserOptions);
+      } else {
+          // Netlify/Production environment
+          const browserOptions = {
+              args: chromium.args,
+              defaultViewport: chromium.defaultViewport,
+              executablePath: await chromium.executablePath,
+              headless: chromium.headless,
+              ignoreHTTPSErrors: true
+          };
+          console.log('Launching browser in production with options:', browserOptions);
+          return puppeteer.launch(browserOptions);
+      }
   }
 
-  public async getProfileImage(username: string): Promise<string | null> {
-    let browser = null;
-    try {
-      browser = await this.getBrowser();
-      const page = await browser.newPage();
-      const config = this.getPlatformConfig(username);
+    public async getProfileImage(username: string): Promise<string | null> {
+        let browser = null;
+        let context = null;
 
-      console.log(`Navigating to profile: ${username}`);
-      await page.goto(config.url, {
-        waitUntil: 'networkidle0',
-        timeout: 30000,
-      });
+        try {
+            console.log('Starting browser...');
+            browser = await this.getBrowser();
+            console.log('Browser started successfully');
 
-      const element = await page.waitForSelector(config.imageSelector, {
-        visible: true,
-        timeout: 5000,
-      });
+            context = await browser.createBrowserContext();
+            console.log('Browser context created');
 
-      if (!element) {
-        console.log('No profile image found for:', username);
-        return null;
-      }
+            const page = await context.newPage();
+            console.log('New page created');
 
-      const srcHandle = await element.getProperty('src');
-      const imageUrl = (await srcHandle.jsonValue()) as string;
+            await page.setRequestInterception(true);
+            console.log('Request interception enabled');
 
-      if (!imageUrl) {
-        console.log('Profile image URL not found for:', username);
-        return null;
-      }
+            page.on('request', (request) => {
+                const resourceType = request.resourceType();
+                if (['font'].includes(resourceType)) {
+                    request.abort();
+                } else {
+                    request.continue();
+                }
+            });
 
-      return imageUrl;
-    } catch (error) {
-      console.error('Error in getProfileImage:', error);
-      return null;
-    } finally {
-      if (browser) await browser.close();
+            const config = this.getPlatformConfig(username);
+            console.log(`Navigating to: ${config.url}`);
+
+            await page.goto(config.url, {
+                waitUntil: 'networkidle0',
+            });
+            console.log('Page loaded');
+
+            const element = await page.waitForSelector(config.imageSelector, {
+                visible: true,
+                timeout: 15000,
+            });
+            console.log('Found selector');
+
+            if (!element) {
+                throw new Error('No profile image element found');
+            }
+
+            const srcHandle = await element.getProperty('src');
+            const imageUrl = (await srcHandle.jsonValue()) as string;
+
+            if (!imageUrl) {
+                throw new Error('No image URL found');
+            }
+
+            return imageUrl;
+
+        } catch (error) {
+            console.error('Error:', error);
+            return null;
+        } finally {
+            if (context) {
+                try {
+                    await context.close();
+                    console.log('Context closed');
+                } catch (closeError) {
+                    console.error('Error closing context:', closeError);
+                }
+            }
+            if (browser) {
+                try {
+                    await browser.close();
+                    console.log('Browser closed');
+                } catch (closeError) {
+                    console.error('Error closing browser:', closeError);
+                }
+            }
+        }
     }
-  }
 }
