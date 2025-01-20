@@ -4,9 +4,10 @@
   publish = "dist"
 
 [functions]
-  external_node_modules = ["@sparticuz/chromium"]
-  included_files = ["node_modules/@sparticuz/chromium/**/*"]
+  external_node_modules = ["@sparticuz/chromium-min"]
+  included_files = ["node_modules/@sparticuz/chromium-min/**/*"]
   node_bundler = "esbuild"
 
 [build.environment]
-  NODE_VERSION = "20"
+  NODE_VERSION = "20.9.0"
+  PNPM_FLAGS = "--shamefully-hoist"
