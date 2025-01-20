@@ -1,4 +1,4 @@
-import chromium from '@sparticuz/chromium-min';
+import chromium from '@sparticuz/chromium';
 import puppeteer from 'puppeteer-core';
 import * as localPuppeteer from 'puppeteer';
 import dotenv from 'dotenv';
@@ -39,7 +39,7 @@ export abstract class BaseSocialService {
             args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
             defaultViewport: chromium.defaultViewport,
             executablePath: await chromium.executablePath(),
-            headless: chromium.headless,
+            headless: true,
             ignoreHTTPSErrors: true
         };
         console.log('Launching browser in production with options:', browserOptions);
