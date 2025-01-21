@@ -24,7 +24,7 @@ export abstract class BaseSocialService {
         '--disable-web-security',
         '--disable-features=IsolateOrigins,site-per-process',
         '--disable-site-isolation-trials',
-        
+
         // Performance optimizations
         '--disable-extensions',
         '--disable-component-extensions-with-background-pages',
@@ -48,12 +48,12 @@ export abstract class BaseSocialService {
         '--disable-accelerated-video-decode',
         '--disable-accelerated-video-encode',
         '--disable-ipc-flooding-protection',
-        
+
         // Memory optimizations
         '--disable-dev-shm-usage',
         '--disable-breakpad',
         '--disable-crash-reporter',
-        
+
         // Network optimizations
         '--disable-client-side-phishing-detection',
         '--disable-component-update',
@@ -62,7 +62,7 @@ export abstract class BaseSocialService {
         '--disable-hang-monitor',
         '--disable-javascript-harmony-shipping',
         '--disable-print-preview',
-        
+
         // Additional performance settings
         '--ignore-certificate-errors',
         '--enable-features=NetworkService,NetworkServiceInProcess',
@@ -70,7 +70,7 @@ export abstract class BaseSocialService {
         '--metrics-recording-only',
         '--no-first-run',
         '--use-gl=swiftshader',
-        '--use-angle=swiftshader'
+        '--use-angle=swiftshader',
       ];
 
       if (isDev) {
@@ -82,13 +82,13 @@ export abstract class BaseSocialService {
           ignoreHTTPSErrors: true,
           defaultViewport: {
             width: 1920,
-            height: 1080
-          }
+            height: 1080,
+          },
         };
         return await localPuppeteer.launch(browserOptions);
       } else {
         console.log('[Browser] Starting in production mode');
-        const execPath = await chromium.executablePath() || '/usr/bin/chromium-browser';
+        const execPath = (await chromium.executablePath()) || '/usr/bin/chromium-browser';
         if (!execPath) return null;
 
         const browserOptions = {
@@ -96,7 +96,7 @@ export abstract class BaseSocialService {
             ...chromium.args,
             ...commonArgs,
             '--window-size=1920,1080',
-            '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
           ],
           defaultViewport: {
             width: 1920,
@@ -104,7 +104,7 @@ export abstract class BaseSocialService {
             deviceScaleFactor: 1,
             hasTouch: false,
             isLandscape: true,
-            isMobile: false
+            isMobile: false,
           },
           executablePath: execPath,
           headless: chromium.headless as boolean,
@@ -129,7 +129,7 @@ export abstract class BaseSocialService {
       if (!browser) return null;
 
       page = await browser.newPage();
-      
+
       await page.setRequestInterception(true);
       page.on('request', (request) => {
         try {
@@ -159,12 +159,14 @@ export abstract class BaseSocialService {
       });
 
       await page.waitForNetworkIdle().catch(() => null);
-      
+
       const navigationPromise = page.goto(config.url);
 
-      const imageElement = await page.waitForSelector(config.imageSelector, {
-        timeout: 10000
-      }).catch(() => null);
+      const imageElement = await page
+        .waitForSelector(config.imageSelector, {
+          timeout: 10000,
+        })
+        .catch(() => null);
 
       if (!imageElement) {
         console.log('[Selector] Image element not found');
@@ -174,7 +176,7 @@ export abstract class BaseSocialService {
       const srcHandle = await imageElement.getProperty('src').catch(() => null);
       if (!srcHandle) return null;
 
-      const imageUrl = await srcHandle.jsonValue().catch(() => null) as string;
+      const imageUrl = (await srcHandle.jsonValue().catch(() => null)) as string;
       if (!imageUrl) return null;
 
       try {
@@ -183,7 +185,6 @@ export abstract class BaseSocialService {
 
       console.log('[Success] Image URL found:', imageUrl.substring(0, 50) + '...');
       return imageUrl;
-
     } catch {
       console.log('[Error] Failed to get profile image');
       return null;

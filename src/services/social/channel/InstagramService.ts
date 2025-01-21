@@ -5,7 +5,7 @@ export class InstagramService extends BaseSocialService {
   getPlatformConfig(username: string): SocialPlatformConfig {
     return {
       url: `https://www.imginn.com/${username}/`,
-      imageSelector: '.page-user .userinfo .img img'
+      imageSelector: '.page-user .userinfo .img img',
     };
   }
 }

@@ -13,11 +13,11 @@ export class NotionService {
       await this.notion.pages.update({
         page_id: pageId,
         icon: {
-          type: "external",
+          type: 'external',
           external: {
-            url: imageUrl
-          }
-        }
+            url: imageUrl,
+          },
+        },
       });
     } catch (error) {
       console.error('Error updating Notion profile icon:', error);
@@ -28,7 +28,7 @@ export class NotionService {
   async getPage(pageId: string) {
     try {
       return await this.notion.pages.retrieve({
-        page_id: pageId
+        page_id: pageId,
       });
     } catch (error) {
       console.error('Error retrieving Notion page:', error);
