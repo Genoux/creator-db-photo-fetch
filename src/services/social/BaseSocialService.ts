@@ -10,6 +10,12 @@ export interface SocialPlatformConfig {
   imageSelector: string;
 }
 
+function delay(timeout: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeout);
+  });
+}
+
 export abstract class BaseSocialService {
   abstract getPlatformConfig(username: string): SocialPlatformConfig;
 
@@ -29,7 +35,7 @@ export abstract class BaseSocialService {
       const browserOptions = {
         args: commonArgs,
         executablePath: process.env.CHROME_EXECUTABLE_PATH,
-        headless: false,
+        headless: true,
         ignoreHTTPSErrors: true
       };
       return localPuppeteer.launch(browserOptions);
@@ -45,7 +51,8 @@ export abstract class BaseSocialService {
           '--no-sandbox',
           '--disable-setuid-sandbox',
           '--disable-dev-shm-usage',
-          '--disable-gpu',
+          '--window-size=1920,1080',
+          '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         ],
         defaultViewport: chromium.defaultViewport,
         executablePath: execPath,
@@ -62,6 +69,9 @@ export abstract class BaseSocialService {
     let page = null;
     
     try {
+
+     const config = this.getPlatformConfig(username);
+
       browser = await this.getBrowser();
       page = await browser.newPage();
   
@@ -89,11 +99,13 @@ export abstract class BaseSocialService {
           request.continue();
         }
       });
-  
-      const config = this.getPlatformConfig(username);
+
+      await page.waitForNetworkIdle();
   
       const navigationPromise = page.goto(config.url);
-  
+
+      await delay(Math.random() * 1000 + 1000);
+
       const imageElement = await page.waitForSelector(config.imageSelector, {
         timeout: 10000
       });
