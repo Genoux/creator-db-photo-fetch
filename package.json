@@ -4,20 +4,27 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "netlify dev",
+    "dev": "NODE_ENV=development netlify dev",
     "build": "tsc",
     "start": "node dist/index.js",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,js}\""
+    "format:check": "prettier --check \"src/**/*.{ts,js}\"",
+    "test:webhook": "NODE_ENV=production netlify dev & ts-node test/testWebhook.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "dependencies": {
     "@netlify/functions": "^2.8.2",
     "@notionhq/client": "^2.2.15",
-    "@sparticuz/chromium": "^131.0.1",
+    "@sparticuz/chromium": "^119.0.2",
+    "@sparticuz/chromium-min": "^131.0.1",
     "@types/node": "^22.10.7",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "puppeteer": "^24.1.0",
     "puppeteer-core": "^24.1.0",
@@ -27,7 +34,8 @@
     "@types/express": "^5.0.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
-    "netlify-cli": "^17.0.0",
-    "prettier": "^3.4.2"
+    "netlify-cli": "^17.38.1",
+    "prettier": "^3.4.2",
+    "ts-node": "^10.9.2"
   }
 }

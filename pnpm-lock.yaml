@@ -15,11 +15,17 @@ importers:
         specifier: ^2.2.15
         version: 2.2.15
       '@sparticuz/chromium':
+        specifier: ^119.0.2
+        version: 119.0.2
+      '@sparticuz/chromium-min':
         specifier: ^131.0.1
         version: 131.0.1
       '@types/node':
         specifier: ^22.10.7
         version: 22.10.7
+      dotenv:
+        specifier: ^16.4.7
+        version: 16.4.7
       express:
         specifier: ^4.21.2
         version: 4.21.2
@@ -48,6 +54,9 @@ importers:
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@22.10.7)(typescript@5.7.3)
 
 packages:
 
@@ -885,8 +894,12 @@ packages:
     resolution: {integrity: sha512-doH1gimEu3A46VX6aVxpHTeHrytJAG6HgdxntYnCFiIFHEM/ZGpG8KiZGBChchjQmG0XFIBL552kBTjVcMZXwQ==}
     engines: {node: '>=12'}
 
-  '@sparticuz/chromium@131.0.1':
-    resolution: {integrity: sha512-VfmHkQmb/Px0zjwdSQwjRMwFw63Qfj+g4Giumz4jiAGEpXHgIZk6xEwlUz6yiUHVDveK2TEgMR2MR6I3okOE7w==}
+  '@sparticuz/chromium-min@131.0.1':
+    resolution: {integrity: sha512-kQqKflJtjcBb8aA1b6L4dhU/8UbCJHcjb3au8cjBhKAG7nzqh//92rHCB6ULkgV0CMEQmfp3LDBQ/W8Wg2k+Yg==}
+    engines: {node: '>= 16'}
+
+  '@sparticuz/chromium@119.0.2':
+    resolution: {integrity: sha512-VB6tHW13YpQ7HqyhKG1KU8Z1RIb/kfHMg8j/4ft5rk8mMvEm2YkBYFCHnj+yb0P/RPLcdgX3+VC58GuJilOtww==}
     engines: {node: '>= 16'}
 
   '@szmarczak/http-timer@5.0.1':
@@ -5604,7 +5617,15 @@ snapshots:
     dependencies:
       escape-string-regexp: 5.0.0
 
-  '@sparticuz/chromium@131.0.1':
+  '@sparticuz/chromium-min@131.0.1':
+    dependencies:
+      follow-redirects: 1.15.9(debug@4.3.7)
+      tar-fs: 3.0.8
+    transitivePeerDependencies:
+      - bare-buffer
+      - debug
+
+  '@sparticuz/chromium@119.0.2':
     dependencies:
       follow-redirects: 1.15.9(debug@4.3.7)
       tar-fs: 3.0.8
