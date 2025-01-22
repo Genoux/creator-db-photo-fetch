@@ -6,10 +6,10 @@ async function testWebhook() {
       id: 'test-id',
       properties: {
         'Main Channel(s)': {
-          url: 'https://www.instagram.com/sonyalrobinson/?hl=en'
-        }
-      }
-    }
+          url: 'https://www.instagram.com/sonyalrobinson/?hl=en',
+        },
+      },
+    },
   };
 
   console.log('Payload:', JSON.stringify(testPayload, null, 2));
@@ -21,7 +21,7 @@ async function testWebhook() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(testPayload)
+      body: JSON.stringify(testPayload),
     });
 
     console.log('Response status:', response.status);

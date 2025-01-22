@@ -1,6 +1,6 @@
 {
   "name": "creator-db-photo-fetch",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -34,7 +34,7 @@
     "@types/express": "^5.0.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
-    "netlify-cli": "^17.0.0",
+    "netlify-cli": "^17.38.1",
     "prettier": "^3.4.2",
     "ts-node": "^10.9.2"
   }
