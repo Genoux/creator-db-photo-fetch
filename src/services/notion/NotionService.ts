@@ -18,6 +18,12 @@ export class NotionService {
             url: imageUrl,
           },
         },
+        cover: {
+          type: 'external',
+          external: {
+            url: imageUrl,
+          },
+        },
       });
     } catch (error) {
       console.error('Error updating Notion profile icon:', error);
