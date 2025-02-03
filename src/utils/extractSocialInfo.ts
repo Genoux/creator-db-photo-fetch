@@ -38,13 +38,16 @@ export function extractSocialInfo(url: string): { platform: string; username: st
         const username = urlObj.pathname.split('/').filter(Boolean)[1];
         return { platform: 'youtube', username };
       }
-      if (urlObj.pathname.startsWith('/@')) {
-        const username = urlObj.pathname.substring(2);
-        return { platform: 'youtube', username };
-      }
+      
       if (urlObj.pathname.includes('/channel/')) {
         const channelId = urlObj.pathname.split('/').filter(Boolean)[1];
         return { platform: 'youtube', username: channelId };
+      }
+    
+      // For handles, just take whatever comes after the first slash
+      const username = urlObj.pathname.split('/').filter(Boolean)[0];
+      if (username) {
+        return { platform: 'youtube', username };
       }
     }
 
