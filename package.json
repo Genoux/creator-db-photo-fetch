@@ -2,27 +2,35 @@
   "name": "creator-db-photo-fetch",
   "version": "1.0.2",
   "description": "",
+  "main": "index.js",
   "scripts": {
-    "dev": "vercel dev",
+    "dev": "NODE_ENV=development vercel dev",
     "build": "tsc",
-    "deploy": "vercel deploy --prod"
+    "start": "node dist/index.js",
+    "format": "prettier --write \"src/**/*.{ts,js}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,js}\"",
+    "test:webhook": "NODE_ENV=production netlify dev & ts-node test/testWebhook.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@9.15.0",
   "engines": {
-    "node": ">=20.0.0"
+    "node": "^18"
   },
   "dependencies": {
     "@notionhq/client": "^2.2.15",
+    "@sparticuz/chromium": "^119.0.2",
+    "@sparticuz/chromium-min": "^131.0.1",
     "@vercel/node": "^3.0.0",
     "dotenv": "^16.4.7",
+    "playwright": "^1.50.1",
     "puppeteer": "^24.1.0",
     "puppeteer-core": "^24.1.0",
     "typescript": "^5.7.3"
   },
   "devDependencies": {
+    "@types/node": "^22.10.7",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
     "prettier": "^3.4.2",

@@ -1,7 +1,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { NotionService } from '../../src/services/notion/NotionService';
-import { SocialProfileService } from '../../src/services/social/SocialProfileService';
-import { extractSocialInfo } from '../../src/utils/extractSocialInfo';
+import { NotionService } from '../src/services/notion/NotionService';
+import { SocialProfileService } from '../src/services/social/SocialProfileService';
+import { extractSocialInfo } from '../src/utils/extractSocialInfo';
 
 interface NotionProperty {
   id: string;

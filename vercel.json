@@ -1,0 +1,12 @@
+{
+  "functions": {
+    "api/*.ts": {
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  },
+  "env": {
+    "CHROME_AWS_CHANNEL": "chrome_aws_lambda",
+    "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true"
+  }
+}
