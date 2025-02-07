@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=development vercel dev",
+    "dev": "ts-node ./src/server.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
@@ -16,7 +16,7 @@
   "license": "ISC",
   "packageManager": "pnpm@9.15.0",
   "engines": {
-    "node": "^18"
+       "node": "^18 || ^20"
   },
   "dependencies": {
     "@notionhq/client": "^2.2.15",

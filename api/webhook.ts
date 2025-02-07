@@ -13,51 +13,54 @@ const notionService = new NotionService();
 const socialProfileService = new SocialProfileService();
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   try {
-    console.log('Received webhook');
-    const payload = req.body;
-
-    if (payload.source.attempt > 1) {
-      console.log('Skipping retry attempt');
-      return res.status(200).json({ success: true });
+    const { body } = req;
+    
+    if (body?.source?.attempt > 1) {
+      return res.status(200).json({ success: true, skipped: 'retry' });
     }
 
-    const properties = payload.data.properties;
-    let socialUrl: string | null = null;
-
-    for (const prop of Object.values(properties) as NotionProperty[]) {
-      if (prop.type === 'url' && prop.url) {
-        socialUrl = prop.url;
-        break;
-      }
-    }
+    const properties = body?.data?.properties ?? {};
+    const socialUrl = Object.values(properties as Record<string, NotionProperty>)
+      .find(prop => prop.type === 'url')?.url ?? null;
 
     if (!socialUrl) {
-      console.log('No social URL found');
-      return res.status(200).json({ success: true });
+      return res.status(200).json({ success: true, skipped: 'no url' });
     }
 
     const socialInfo = extractSocialInfo(socialUrl);
     if (!socialInfo) {
-      console.log('No social info extracted');
-      return res.status(200).json({ success: true });
+      return res.status(200).json({ success: true, skipped: 'invalid url' });
     }
 
-    console.log('7. Fetching profile image for:', socialInfo.platform, socialInfo.username);
-    const profileImageUrl = await socialProfileService.getProfileImage(
-      socialInfo.platform,
-      socialInfo.username
-    );
+    const [profileImageUrl] = await Promise.all([
+      socialProfileService.getProfileImage(
+        socialInfo.platform,
+        socialInfo.username
+      )
+    ]);
 
-    console.log('8. Profile image URL:', profileImageUrl);
     if (profileImageUrl) {
-      await notionService.updateProfileImage(payload.data.id, profileImageUrl);
-      console.log('Notion updated successfully');
+      await notionService.updateProfileImage(body.data.id, profileImageUrl);
     }
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ 
+      success: true,
+      updated: !!profileImageUrl 
+    });
+
   } catch (error) {
-    console.error('ERROR:', error);
-    return res.status(200).json({ success: true });
+    // Log error details but don't expose them in response
+    console.error('[Webhook Error]:', error);
+    
+    // Return 200 to acknowledge receipt but indicate error
+    return res.status(200).json({ 
+      success: false, 
+      error: 'Internal processing error' 
+    });
   }
 }
