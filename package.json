@@ -1,7 +1,7 @@
 {
-  "name": "creator-db-photo-fetch",
-  "version": "1.0.2",
-  "description": "",
+  "name": "creatordb-profile-image-fetch",
+  "version": "2.0.0",
+  "description": "Fetch profile images from Creatordb",
   "main": "index.js",
   "scripts": {
     "dev": "ts-node ./src/server.ts",
@@ -16,7 +16,7 @@
   "license": "ISC",
   "packageManager": "pnpm@9.15.0",
   "engines": {
-       "node": "^18 || ^20"
+    "node": "^18 || ^20"
   },
   "dependencies": {
     "@notionhq/client": "^2.2.15",
