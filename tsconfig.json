@@ -16,7 +16,8 @@
   },
   "include": [
     "api/**/*.ts",
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "public/*.ico"
   ],
   "exclude": [
     "node_modules",
