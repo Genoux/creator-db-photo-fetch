@@ -4,5 +4,15 @@
       "memory": 3008,
       "maxDuration": 60
     }
-  }
+  },
+  "routes": [
+    {
+      "src": "/favicon.png",
+      "dest": "/public/favicon.png"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/api/$1"
+    }
+  ]
 }
