@@ -1,7 +1,7 @@
 {
   "name": "creatordb-profile-image-fetch",
-  "version": "2.1.0",
-  "description": "Fetch profile images from Creatordb",
+  "version": "2.1.1",
+  "description": "API endpoint that fetches creator profile images when triggered by Notion automation buttons in the Creator Database",
   "main": "index.js",
   "scripts": {
     "dev": "ts-node ./src/index.ts",

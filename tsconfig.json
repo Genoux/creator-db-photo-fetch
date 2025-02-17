@@ -12,15 +12,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "resolveJsonModule": true
   },
-  "include": [
-    "api/**/*.ts",
-    "src/**/*.ts",
-    "public/*.ico"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["api/**/*.ts", "src/**/*.ts", "public/*.ico"],
+  "exclude": ["node_modules", "dist"]
 }
