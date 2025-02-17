@@ -1,10 +1,10 @@
 {
   "name": "creatordb-profile-image-fetch",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Fetch profile images from Creatordb",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node ./src/server.ts",
+    "dev": "ts-node ./src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
@@ -22,14 +22,17 @@
     "@notionhq/client": "^2.2.15",
     "@sparticuz/chromium": "^119.0.2",
     "@sparticuz/chromium-min": "^131.0.1",
+    "@vercel/blob": "^0.27.1",
     "@vercel/node": "^3.0.0",
     "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "playwright": "^1.50.1",
     "puppeteer": "^24.1.0",
     "puppeteer-core": "^24.1.0",
     "typescript": "^5.7.3"
   },
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "@types/node": "^22.10.7",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
